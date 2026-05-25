@@ -2,21 +2,22 @@
 
 #include "utils.h"
 #include <algorithm>
+#include <cctype>
 #include <sstream>
 
 namespace utils_module {
 
-// 将字符串转换为大写
 std::string to_upper(const std::string& str) {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::toupper);
+    std::transform(result.begin(), result.end(), result.begin(),
+        [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
     return result;
 }
 
-// 将字符串转换为小写
 std::string to_lower(const std::string& str) {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), ::tolower);
+    std::transform(result.begin(), result.end(), result.begin(),
+        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
     return result;
 }
 

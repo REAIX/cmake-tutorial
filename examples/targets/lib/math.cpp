@@ -16,6 +16,7 @@ int multiply(int a, int b) {
 
 // 阶乘运算（递归实现）
 long long factorial(int n) {
+    if (n < 0) return 0;
     if (n <= 1) return 1;
     return n * factorial(n - 1);
 }

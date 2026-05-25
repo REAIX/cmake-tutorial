@@ -29,6 +29,7 @@ int main() {
     std::cout << "  Version:    " << build_info::version << "\n";
     std::cout << "  Build type: " << build_info::build_type << "\n";
     std::cout << "  Git commit: " << build_info::git_commit << "\n";
+    std::cout << "  Timestamp:  " << build_info::timestamp << "\n";
     std::cout << "\n";
 
     std::cout << "Try these commands:\n";
