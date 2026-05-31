@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type" FORCE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type")
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
         "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
@@ -29,6 +29,7 @@ if(BUILD_EXAMPLES)
     add_subdirectory(examples/advanced)
     add_subdirectory(examples/compiler-options)
     add_subdirectory(examples/testing)
+    add_subdirectory(examples/header-only)
 endif()
 
 if(BUILD_FETCHCONTENT)

@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+# 参考文档：docs/05-CMake进阶技巧.md（FetchContent部分）
 
 project(FetchContentExample VERSION 1.0.0 LANGUAGES CXX)
 

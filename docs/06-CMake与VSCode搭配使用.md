@@ -21,7 +21,6 @@ VS Code 需要安装以下插件才能愉快地使用 CMake：
 | **C/C++** (Microsoft) | 代码补全、跳转、调试 | ⭐⭐⭐ 必装 |
 | **CMake** (twxs) | CMake 语法高亮、CMakeLists.txt 补全 | ⭐⭐⭐ 必装 |
 | **CMake Tools** (Microsoft) | 一键构建、配置、调试 | ⭐⭐⭐ 必装 |
-| **Bracket Pair Colorizer 2** | 括号配对高亮 | ⭐⭐ 推荐 |
 
 安装方法：VS Code 左侧扩展图标 → 搜索上述插件名称 → 点击安装
 

@@ -2,7 +2,7 @@
 // 演示如何使用 add_subdirectory 构建多模块项目
 
 #include <iostream>
-#include "math.h"
+#include "math_lib.h"
 #include "utils.h"
 
 // 主函数：程序入口点

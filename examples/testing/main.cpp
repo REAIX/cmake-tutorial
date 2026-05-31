@@ -1,5 +1,5 @@
 #include <iostream>
-#include "math.h"
+#include "math_lib.h"
 
 int main() {
     std::cout << "====================================\n";
@@ -22,7 +22,7 @@ int main() {
 
     std::cout << "Run tests with:\n";
     std::cout << "  ctest --output-on-failure\n";
-    std::cout << "  ctest -j4 --parallel 4\n";
+    std::cout << "  ctest --parallel 4\n";
     std::cout << "  ctest -R test_add\n";
     std::cout << "  ctest -T Test\n";
     std::cout << "====================================\n";

@@ -1,5 +1,6 @@
-﻿# 设置 CMake 最低版本要求
+# 设置 CMake 最低版本要求
 cmake_minimum_required(VERSION 3.20)
+# 参考文档：docs/03-CMake最佳实践.md（模块化部分）
 
 # 定义项目名称、版本和使用的语言
 project(ModulesExample VERSION 1.0.0 LANGUAGES CXX)

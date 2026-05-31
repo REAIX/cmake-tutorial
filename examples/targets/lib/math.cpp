@@ -1,6 +1,6 @@
 // 数学库实现文件
 
-#include "math.h"
+#include "math_lib.h"
 
 namespace math {
 

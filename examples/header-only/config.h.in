@@ -1,0 +1,5 @@
+#pragma once
+
+#define HEADER_ONLY_EXAMPLE_VERSION "@PROJECT_VERSION@"
+
+#cmakedefine ENABLE_DEBUG_OUTPUT

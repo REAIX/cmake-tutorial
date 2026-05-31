@@ -1,5 +1,7 @@
 # CMake 基础概念
 
+> 📂 **对应示例**：本节内容对应示例代码 [examples/basic/](../examples/basic/)，建议结合示例代码一起学习。
+
 ## 什么是 CMake？
 
 CMake 是一个跨平台的构建系统生成工具，它不直接构建项目，而是生成平台特定的构建文件（如 Makefile、Visual Studio 项目文件等）。

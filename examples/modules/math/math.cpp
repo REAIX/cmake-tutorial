@@ -1,6 +1,6 @@
 // 数学模块实现文件
 
-#include "math.h"
+#include "math_lib.h"
 #include <cmath>
 
 namespace math_module {

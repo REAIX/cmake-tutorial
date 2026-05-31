@@ -1,8 +1,8 @@
-if(NOT GIT_COMMIT_HASH OR GIT_COMMIT_HASH STREQUAL "")
+if(NOT GIT_COMMIT_HASH)
     set(GIT_COMMIT_HASH "unknown")
 endif()
 
-if(NOT BUILD_TYPE OR BUILD_TYPE STREQUAL "")
+if(NOT BUILD_TYPE)
     set(BUILD_TYPE "Unknown")
 endif()
 

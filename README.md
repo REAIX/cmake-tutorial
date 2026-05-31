@@ -2,7 +2,7 @@
 
 ## 项目简介
 
-cmake-tutorial 是一个渐进式的 CMake 学习项目，通过 8 个精心设计的示例模块，帮助您从零开始掌握现代 CMake 的核心概念和最佳实践。
+cmake-tutorial 是一个渐进式的 CMake 学习项目，通过 9 个精心设计的示例模块，帮助您从零开始掌握现代 CMake 的核心概念和最佳实践。
 
 ## 项目结构
 
@@ -53,6 +53,12 @@ cmake-tutorial/
 │   │   └── test_factorial.cpp
 │   └── fetchcontent/           # 模块8：依赖管理（FetchContent）
 │       ├── CMakeLists.txt
+│       └── main.cpp
+│   └── header-only/           # 模块9：Header-Only 库 & configure_file
+│       ├── CMakeLists.txt
+│       ├── config.h.in
+│       ├── include/
+│       │   └── format_lib.h
 │       └── main.cpp
 │
 └── docs/                       # 文档
@@ -245,6 +251,34 @@ cmake --build .
 
 ---
 
+### 模块 09：Header-Only 库 & configure_file
+**学习目标**：掌握 Header-Only 库的创建方式与 configure_file 配置生成
+
+**核心概念**：
+- `add_library(... INTERFACE)` - 创建 Header-Only 库目标
+- `target_include_directories(... INTERFACE)` - 仅对消费者可见的包含路径
+- `target_compile_features(... INTERFACE)` - 传播编译特性给消费者
+- `configure_file()` - 从模板生成配置头文件
+  - `@VAR@` - 替换为 CMake 变量的值
+  - `#cmakedefine` - 根据变量是否定义生成 `#define` 或 `/* #undef */`
+- INTERFACE 可见性：Header-Only 库没有自身编译，所有属性必须使用 INTERFACE
+
+**构建命令**：
+```bash
+cd examples/header-only
+mkdir build && cd build
+cmake ..
+cmake --build .
+./bin/header_only_example
+
+# 启用调试输出
+cmake -DENABLE_DEBUG_OUTPUT=ON ..
+cmake --build .
+./bin/header_only_example
+```
+
+---
+
 ## 快速开始
 
 ### 环境要求
@@ -277,6 +311,7 @@ cmake --build .
 ./bin/advanced_example
 ./bin/compiler_options_example
 ./bin/testing_example
+./bin/header_only_example
 
 # 6. 运行测试
 ctest --output-on-failure

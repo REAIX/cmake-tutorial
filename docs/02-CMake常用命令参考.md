@@ -1,5 +1,7 @@
 # CMake 常用命令参考
 
+> 📂 **对应示例**：本节内容对应示例代码 [examples/variables/](../examples/variables/) 和 [examples/targets/](../examples/targets/)，建议结合示例代码一起学习。
+
 ## 项目配置命令
 
 ### cmake\_minimum\_required

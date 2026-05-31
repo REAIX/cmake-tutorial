@@ -1,0 +1,80 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default (Release)",
+            "description": "Default build with Release configuration",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "BUILD_EXAMPLES": "ON",
+                "BUILD_FETCHCONTENT": "OFF"
+            }
+        },
+        {
+            "name": "debug",
+            "displayName": "Debug",
+            "description": "Debug build with full debug info",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "release",
+            "displayName": "Release",
+            "description": "Release build with full optimization",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "mingw",
+            "displayName": "MinGW Makefiles",
+            "description": "Build using MinGW Makefiles generator",
+            "inherits": "default",
+            "generator": "MinGW Makefiles"
+        },
+        {
+            "name": "msvc",
+            "displayName": "Visual Studio 2022",
+            "description": "Build using Visual Studio 2022 generator",
+            "inherits": "default",
+            "generator": "Visual Studio 17 2022"
+        },
+        {
+            "name": "fetchcontent",
+            "displayName": "With FetchContent",
+            "description": "Enable FetchContent example (requires network)",
+            "inherits": "default",
+            "cacheVariables": {
+                "BUILD_FETCHCONTENT": "ON"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        },
+        {
+            "name": "release",
+            "configurePreset": "release"
+        },
+        {
+            "name": "mingw",
+            "configurePreset": "mingw"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "test",
+            "configurePreset": "default",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
+    ]
+}

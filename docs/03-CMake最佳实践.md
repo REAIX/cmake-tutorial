@@ -1,5 +1,7 @@
 # CMake 最佳实践
 
+> 📂 **对应示例**：本节内容对应示例代码 [examples/modules/](../examples/modules/) 和 [examples/targets/](../examples/targets/)，建议结合示例代码一起学习。
+
 ## 1. 使用现代 CMake
 
 ### ✅ 推荐：目标导向的 CMake

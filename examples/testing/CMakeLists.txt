@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
+# 参考文档：docs/03-CMake最佳实践.md（测试部分）
 
 project(TestingExample VERSION 1.0.0 LANGUAGES CXX)
+
+enable_testing()
 
 add_library(testing_math STATIC
     math.cpp

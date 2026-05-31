@@ -1,5 +1,7 @@
 # CMake 进阶技巧
 
+> 📂 **对应示例**：本节内容对应示例代码 [examples/advanced/](../examples/advanced/) 和 [examples/fetchcontent/](../examples/fetchcontent/)，建议结合示例代码一起学习。
+
 ## 1. 自定义 CMake 模块
 
 ### 创建可重用的 CMake 模块

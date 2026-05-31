@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+# 参考文档：docs/05-CMake进阶技巧.md
 
 project(AdvancedExample VERSION 1.0.0 LANGUAGES CXX)
 
@@ -23,7 +24,7 @@ if(NOT GIT_COMMIT_HASH)
 endif()
 
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release")
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type")
 endif()
 
 string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d %H:%M:%S")

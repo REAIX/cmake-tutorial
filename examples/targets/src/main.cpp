@@ -1,5 +1,5 @@
 #include <iostream>
-#include "math.h"
+#include "math_lib.h"
 #include "string_utils.h"
 
 int main() {

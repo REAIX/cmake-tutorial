@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+# 参考文档：docs/03-CMake最佳实践.md（可见性部分）
 
 project(TargetsExample VERSION 1.0.0 LANGUAGES CXX)
 
