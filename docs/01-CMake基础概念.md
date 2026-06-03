@@ -29,7 +29,7 @@ CMakeLists.txt → CMake → 构建文件 → 本地构建工具 → 可执行�
 
 目标是 CMake 构建系统的核心概念，主要有两种类型：
 
-> 💡 **比喻**：想象你在盖一座房子，"目标"就是你要建造的东西——可以是一栋完整的房子（可执行文件），也可以是预制好的房间模块（库）。房子需要由这些组件组合而成，CMake 正是管理这些组件的工具。
+> 💡 **比喻**：想象你在玩乐高——"目标"就是你要拼的东西。一栋完整的城堡（可执行文件），或者一包预制好的城墙模块（库）。城堡需要由这些模块拼装而成，CMake 就是那个"乐高说明书"，告诉你哪块拼哪里。
 
 #### 可执行目标（Executable）
 ```cmake
@@ -52,7 +52,7 @@ add_library(my_lib INTERFACE)
 
 每个目标都有自己的属性，控制编译、链接等行为：
 
-> 💡 **比喻**：如果说目标是"房子"，那么"属性"就是房子的各种配置——门的大小、窗户的位置、墙的颜色等。不同房子有不同的配置，CMake允许你为每个目标单独设置这些属性。
+> 💡 **比喻**：如果说目标是"房子"，那"属性"就是装修方案——地板用木的还是瓷砖的、墙刷什么颜色、空调装几匹的。每栋房子可以有不同的装修方案，CMake 允许你给每栋房子单独出一份装修清单。
 
 ```cmake
 # 包含目录 - 就像告诉建筑工人："需要的材料在哪个仓库"
@@ -80,7 +80,7 @@ target_link_libraries(my_target
 
 CMake 有三种属性可见性：
 
-> 💡 **比喻**：这就像装修公司与业主的关系。PRIVATE（隐私）= 这是装修公司自己的内部资料，不给业主看；PUBLIC（公开）= 这是给业主看的使用说明书；INTERFACE（接口）= 这只是给业主看的安装指南，但装修公司自己不用。
+> 💡 **比喻**：这就像餐厅的厨房和菜单——PRIVATE 是厨师的秘方，客人看不到也吃不到；PUBLIC 是招牌菜，厨师做、客人吃；INTERFACE 是外卖菜单，厨师自己不吃，但客人可以点。
 
 | 可见性 | 含义 | 使用场景 |
 |--------|------|----------|
@@ -111,7 +111,7 @@ target_link_libraries(my_app PRIVATE my_lib)
 
 ### 1. 普通变量
 
-> 💡 **比喻**：普通变量就像记在便签纸上的临时メモ，关机就没了。下次运行CMake时，这些值不会保留。
+> 💡 **比喻**：普通变量就像写在草稿纸上的便签——用完就扔，下次开会（运行 CMake）还得重新写。
 
 ```cmake
 # 设置变量
@@ -124,7 +124,7 @@ message(STATUS "MY_VAR = ${MY_VAR}")
 
 ### 2. 缓存变量（Cache Variables）
 
-> 💡 **比喻**：缓存变量就像刻在石头上的记录，会永久保存下来。即使关闭电脑，下次打开CMake时还能看到这些值。这就是为什么CMakeCache.txt文件很重要的原因。
+> 💡 **比喻**：缓存变量就像刻在石碑上的规定——一旦立了，风吹雨打都不变。下次开村民大会（运行 CMake），大家还是按石碑上的办。除非你抡起锤子重新刻（修改缓存）。
 
 缓存变量会持久化到 CMakeCache.txt 文件中：
 
@@ -138,7 +138,7 @@ set(MY_CACHE_VAR "default_value" CACHE STRING "Description")
 
 ### 3. 环境变量
 
-> 💡 **比喻**：环境变量就像你电脑的系统设置——PATH、HOME等。它们影响全局，CMake可以读取和修改。
+> 💡 **比喻**：环境变量就像城市的"基础设施"——自来水管、电网、天然气。你家里（CMake 项目）可以接通使用，但通常不会自己去修管道。
 
 ```cmake
 # 访问环境变量
@@ -170,7 +170,7 @@ CMake 提供了许多内置变量：
 
 CMake 支持多种构建类型：
 
-> 💡 **比喻**：这就像装修的不同级别。Debug = 毛坯房+所有监控摄像头（方便调试）；Release = 精装修（追求完美效果）；RelWithDebInfo = 精装修但保留了监控录像（出了问题还能回看）；MinSizeRel = 简约装修（节省空间为主）。
+> 💡 **比喻**：这就像装修的不同级别。Debug = 毛坯房+满屋摄像头+每面墙都贴满标签（方便找问题，但住着不舒服）；Release = 豪华精装修，标签全撕了，住着爽但出了问题找不到原因；RelWithDebInfo = 精装修但偷偷在天花板藏了几个摄像头（出了事还能调监控）；MinSizeRel = 极简主义装修——能省则省，能小则小，断舍离爱好者首选。
 
 ```cmake
 # 设置构建类型
@@ -194,11 +194,107 @@ set(CMAKE_BUILD_TYPE Release)
 
 ---
 
+## 函数与宏
+
+> 💡 **比喻**：函数就像"外卖套餐"——你点了一份宫保鸡丁套餐，厨房按标准流程做出来，你吃你的，不影响隔壁桌。宏就像"抄作业"——把别人的答案直接抄到你自己的卷子上，改了就是改了，没有"隔壁桌"这回事。
+
+### function（函数）
+
+函数有自己的变量作用域，函数内修改的变量不会影响外部：
+
+```cmake
+# 定义函数
+function(add_my_library name)
+    # 函数参数
+    # ARGC - 参数个数
+    # ARGV - 所有参数列表
+    # ARGV0, ARGV1, ... - 按位置访问参数
+    # ARGN - 多余的参数
+
+    add_library(${name} STATIC ${ARGN})
+    target_compile_features(${name} PUBLIC cxx_std_20)
+
+    # 使用 PARENT_SCOPE 修改外部变量
+    set(LAST_LIB_NAME ${name} PARENT_SCOPE)
+endfunction()
+
+# 调用函数
+add_my_library(math_lib math.cpp add.cpp)
+# 创建了静态库 math_lib，源文件为 math.cpp add.cpp
+```
+
+### macro（宏）
+
+宏没有自己的作用域，直接在调用处展开：
+
+```cmake
+# 定义宏
+macro(print_version)
+    message(STATUS "Project: ${PROJECT_NAME}")
+    message(STATUS "Version: ${PROJECT_VERSION}")
+endmacro()
+
+# 调用宏
+print_version()
+```
+
+### function vs macro 选择
+
+| 对比项 | function | macro |
+|--------|----------|-------|
+| 变量作用域 | 独立作用域 | 共享调用者作用域 |
+| 修改外部变量 | 需要 `PARENT_SCOPE` | 直接修改 |
+| 推荐程度 | ✅ 推荐 | ⚠️ 仅用于简单文本替换 |
+
+> 💡 **建议**：优先使用 `function`，避免 `macro` 的作用域污染问题。只有在需要修改调用者变量或做简单文本替换时才使用 `macro`。
+
+---
+
+## CMake 策略（Policy）
+
+> 💡 **比喻**：CMake 策略就像"交通规则改版"——以前红灯可以右转，现在不行了。策略机制就是给你一个选择：按新规矩来（NEW），还是按老规矩来（OLD）。`cmake_minimum_required(VERSION 3.20)` 就相当于说"我自愿遵守 3.20 版本的所有新交规"。
+
+CMake 随版本更新会引入行为变化，策略机制控制如何处理这些变化：
+
+```cmake
+# 查看当前策略设置
+cmake_policy(GET CMP0054 policy_status)
+message(STATUS "CMP0054: ${policy_status}")
+
+# 设置策略为 NEW（推荐，使用新行为）
+cmake_policy(SET CMP0054 NEW)
+
+# 设置策略为 OLD（使用旧行为，不推荐）
+cmake_policy(SET CMP0054 OLD)
+
+# 设置策略范围（推荐方式）
+cmake_policy(PUSH)
+cmake_policy(SET CMP0054 NEW)
+# ... 受影响的代码 ...
+cmake_policy(POP)
+```
+
+### 常见策略
+
+| 策略 | 版本 | 说明 |
+|------|------|------|
+| `CMP0048` | 3.0 | `project()` 命令管理 VERSION |
+| `CMP0054` | 3.1 | `if()` 中仅对未引号参数解引用变量 |
+| `CMP0063` | 3.3 | 对可见性隐藏的库目标也启用符号可见性 |
+| `CMP0074` | 3.12 | `find_package()` 搜索 `<Package>_ROOT` 变量 |
+| `CMP0077` | 3.13 | `option()` 命令在已定义变量时不再覆盖 |
+| `CMP0092` | 3.15 | MSVC 警告标志 `/W3` 不再默认添加 |
+| `CMP0100` | 3.17 | `file(STRINGS)` 中 `REGEX` 选项的行为 |
+
+> 💡 **最佳实践**：使用 `cmake_minimum_required(VERSION 3.20)` 会自动将所有在该版本之前引入的策略设为 NEW 行为，通常不需要手动设置策略。只有在遇到策略警告时才需要处理。
+
+---
+
 ## 生成器表达式
 
 生成器表达式允许在构建时（而非配置时）求值：
 
-> 💡 **比喻**：想象你在写一份"未来指令"。配置时CMake只是读懂了你的指令，但具体执行要等到真正盖房子的时候。比如"如果业主是中国人，就用中文说明书；如果是美国人，就用英文说明书"——这就是生成器表达式在做的事情：条件判断被推迟到了真正构建的那一刻。
+> 💡 **比喻**：生成器表达式就像"密函"——你写的时候只封好信封，不到拆信的那一刻谁也不知道里面写了啥。比如"如果业主是中国人，就送茅台；如果是法国人，就送红酒"——礼物是什么，要等真正上门那一刻才揭晓。这就是生成器表达式的魔法：条件判断被推迟到了构建时才求值。
 
 ```cmake
 # 根据构建类型设置不同的定义
@@ -231,11 +327,56 @@ target_compile_options(my_target PRIVATE
 | `$<IF:cond,true,false>` | 条件表达式 |
 | `$<TARGET_PROPERTY:prop>` | 目标属性值 |
 
+### 更多实用生成器表达式
+
+| 表达式 | 说明 |
+|--------|------|
+| `$<TARGET_FILE:target>` | 目标的输出文件路径 |
+| `$<TARGET_FILE_NAME:target>` | 目标的输出文件名 |
+| `$<TARGET_OBJECTS:target>` | 对象库的目标文件 |
+| `$<BUILD_INTERFACE:...>` | 构建时使用的路径 |
+| `$<INSTALL_INTERFACE:...>` | 安装后使用的路径 |
+| `$<COMPILE_LANGUAGE:lang>` | 当前编译的语言 |
+| `$<STREQUAL:a,b>` | 字符串相等比较 |
+| `$<VERSION_GREATER:a,b>` | 版本号比较 |
+| `$<ANGLE-R>` | 右尖括号 `>`（用于嵌套） |
+
+#### 嵌套生成器表达式示例
+
+```cmake
+# 根据编译器和构建类型组合设置选项
+target_compile_options(my_target PRIVATE
+    $<$<AND:$<CXX_COMPILER_ID:GNU>,$<CONFIG:Debug>>:-g -O0>
+    $<$<AND:$<CXX_COMPILER_ID:MSVC>,$<CONFIG:Release>>:/O2 /DNDEBUG>
+)
+
+# 使用 BUILD_INTERFACE 和 INSTALL_INTERFACE（库导出时必需）
+target_include_directories(my_lib
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+)
+
+# 获取目标文件路径（用于自定义命令）
+add_custom_command(TARGET my_app POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+        $<TARGET_FILE:my_lib>
+        ${CMAKE_CURRENT_BINARY_DIR}/
+    COMMENT "Copying library to build directory"
+)
+
+# 根据语言类型设置选项（多语言项目）
+target_compile_options(my_target PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-std=c++20>
+    $<$<COMPILE_LANGUAGE:C>:-std=c11>
+)
+```
+
 ---
 
 ## 主流编译器介绍
 
-> 💡 **比喻**：编译器就像"翻译员"，把你的C++代码翻译成机器能读懂的语言。不同的翻译员有不同的方言和习惯，你需要用不同的方式与他们沟通。
+> 💡 **比喻**：编译器就像"翻译官"——把你的 C++ 代码翻译成机器听得懂的 0 和 1。GCC 是"老牌翻译"，稳重可靠但话多；Clang 是"年轻翻译"，报错信息像写散文一样优美；MSVC 是"微软御用翻译"，只在 Windows 这个"紫禁城"里上班，规矩多但待遇好。
 
 ### GCC (GNU Compiler Collection)
 
@@ -407,7 +548,7 @@ add_subdirectory(src)
 
 ### 1. 配置阶段（Configure）
 
-> 💡 **比喻**：这个阶段就像建筑师拿到你的需求后，画设计图、选材料、算成本的阶段。他会检查你有什么工具（编译器）、需要什么材料（库），然后制定一份详细的建造计划。
+> 💡 **比喻**：这个阶段就像建筑师拿到你的需求后，画设计图、选材料、算成本。他会检查你有什么工具（编译器）、需要什么材料（库），然后制定一份详细的建造计划。如果发现你想要的材料缺货（找不到依赖库），他会当场罢工（报错）。
 
 ```bash
 # 在项目根目录
@@ -429,11 +570,11 @@ CMake 根据生成器创建构建文件：
 - Visual Studio
 - Xcode
 
-> 💡 **比喻**：这个阶段就像建筑师把设计图交给施工队。不同施工队需要不同的图纸格式——有的是蓝图（Makefiles），有的是施工单（Ninja），有的是3D模型（Visual Studio）。
+> 💡 **比喻**：这个阶段就像建筑师把设计图交给施工队。不同施工队要的图纸格式不一样——老派施工队要蓝图（Makefiles），效率狂要施工单（Ninja），微软施工队要 3D 模型（Visual Studio），苹果施工队要手绘效果图（Xcode）。
 
 ### 3. 构建阶段（Build）
 
-> 💡 **比喻**：这就是真正动手盖房子的阶段。工人根据图纸开始施工，最终产出可住的房子（可执行文件）或预制房间（库文件）。
+> 💡 **比喻**：这就是真正动手盖房子的阶段。工人们根据图纸叮叮当当地施工，最终产出能住的房子（可执行文件）或预制房间（库文件）。如果代码有 bug，就像房子漏水——住进去才知道。
 
 ```bash
 cmake --build .
@@ -446,7 +587,7 @@ msbuild     # Visual Studio
 
 ### 4. 安装阶段（Install）
 
-> 💡 **比喻**：房子盖好后，需要搬到指定的地方。有的要搬到城市的商品房区（/usr/local），有的要搬到你的项目目录。这就是安装阶段做的事情。
+> 💡 **比喻**：房子盖好了，得搬进小区。有的搬进"高档小区"（/usr/local），有的搬进"经济适用房"（用户目录），还有的搬进"临时板房"（构建目录）。`pip install` 的 C++ 版本就是这个阶段。
 
 ```bash
 cmake --install . --prefix /usr/local
@@ -461,6 +602,8 @@ CMake 的核心概念：
 - **属性**：控制目标的行为（包含路径、编译选项等）
 - **可见性**：控制属性的传播（PUBLIC/PRIVATE/INTERFACE）
 - **变量**：存储和传递配置信息
+- **函数与宏**：封装可重用的构建逻辑
 - **生成器表达式**：构建时求值的表达式
+- **策略**：控制 CMake 版本间的行为兼容性
 
 理解这些概念是掌握 CMake 的基础！

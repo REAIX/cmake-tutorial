@@ -68,7 +68,9 @@ cmake-tutorial/
     ├── 04-CMake常见问题.md
     ├── 05-CMake进阶技巧.md
     ├── 06-CMake与VSCode搭配使用.md
-    └── 07-CMake开发Qt6指南.md
+    ├── 07-CMake开发Qt6指南.md
+    ├── 08-CMake与CI-CD集成.md
+    └── 09-CMake与IDE集成.md
 ```
 
 ## 学习路径
@@ -211,6 +213,7 @@ cmake --build .
 - `add_test()` - 注册测试用例
 - `ctest` 命令 - 运行测试
 - 测试过滤 - `-R` 正则匹配
+- Google Test 集成 - `USE_GTEST` 选项启用 GTest
 
 **构建命令**：
 ```bash
@@ -227,6 +230,11 @@ ctest -j4
 
 # 运行特定测试
 ctest -R test_add
+
+# 启用 Google Test（需要网络下载 GTest）
+cmake -DUSE_GTEST=ON ..
+cmake --build .
+ctest --output-on-failure
 ```
 
 ---

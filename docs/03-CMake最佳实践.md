@@ -6,7 +6,7 @@
 
 ### ✅ 推荐：目标导向的 CMake
 
-> 💡 **比喻**：老式CMake就像用大喇叭广播命令，所有人都能听到；现代CMake就像给每个人发邮件，精确投递。这让代码更容易理解和维护。
+> 💡 **比喻**：老式 CMake 就像村长拿大喇叭喊"全村人注意了！都给我装防盗门！"——不管你家需不需要，都得装。现代 CMake 就像快递小哥，精确投递："张三家，防盗门；李四家，监控摄像头。"谁需要什么，一清二楚。
 
 现代 CMake（3.x）采用目标导向的设计，所有属性都通过目标设置：
 
@@ -32,7 +32,7 @@ target_compile_options(my_lib
 
 ### ❌ 避免：全局命令
 
-> 💡 **比喻**：这就像在公司里用大喇叭喊"所有人必须用这个格式写报告"，而不是给每个人单独发邮件。每个人都得被迫接受这个格式，即使不需要。
+> 💡 **比喻**：这就像公司老板群发邮件"全体员工必须穿西装！"——连保洁阿姨和程序员都得穿，荒谬且浪费。全局命令就是这种"一刀切"的霸道做法。
 
 避免使用影响全局状态的命令：
 
@@ -58,7 +58,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
 ### PUBLIC - 对外接口
 
-> 💡 **比喻**：就像产品的"使用说明书"，需要提供给用户。
+> 💡 **比喻**：就像产品的"使用说明书"——你卖冰箱，说明书得给客户看，不然人家不会用。
 
 ```cmake
 # 库的头文件路径应该是 PUBLIC
@@ -71,7 +71,7 @@ target_include_directories(my_lib
 
 ### PRIVATE - 内部实现
 
-> 💡 **比喻**：就像公司的"内部资料"，只需要自己人知道，不需要告诉客户。
+> 💡 **比喻**：就像公司的"内部机密"——配方是商业秘密，客户不需要知道可乐到底加了什么，只要好喝就行。
 
 ```cmake
 # 内部依赖应该是 PRIVATE
@@ -88,7 +88,7 @@ target_link_libraries(my_lib
 
 ### INTERFACE - 仅对消费者
 
-> 💡 **比喻**：这就像"纯咨询服务"——我自己不生产任何东西，但我知道怎么用这些知识来帮助你。
+> 💡 **比喻**：就像"美食评论家"——自己不下厨（没有源文件），但知道哪家餐厅好吃（头文件路径），还能给你推荐（传播给消费者）。
 
 ```cmake
 # 头文件库使用 INTERFACE
@@ -211,7 +211,7 @@ include(CPack)
 
 ### ✅ 推荐：显式列出源文件
 
-> 💡 **比喻**：这就像列一份详细的材料清单。每个人都知道需要什么，缺了什么一目了然。
+> 💡 **比喻**：这就像列一份详细的购物清单——去超市前写好"鸡蛋、牛奶、面包"，缺啥一目了然。虽然写清单麻烦，但不会买错东西回家。
 
 ```cmake
 add_library(my_lib
@@ -228,7 +228,7 @@ add_library(my_lib
 
 ### ⚠️ 谨慎使用：GLOB 自动获取
 
-> 💡 **比喻**：这就像让秘书自动扫描文件夹里的所有文件。虽然方便，但如果有人偷偷放了一份文件进去或者删了一份，你可能不知道。
+> 💡 **比喻**：这就像让扫地机器人自动打扫——方便是方便，但它不会告诉你桌底下多了只袜子（新文件），也不会告诉你沙发下面少了只拖鞋（删了文件），直到你踩到才知道出事了。
 
 ```cmake
 file(GLOB SOURCES "src/*.cpp")
@@ -388,6 +388,29 @@ install(FILES
 )
 ```
 
+配置文件模板 `cmake/my_lib-config.cmake.in`：
+
+```cmake
+@PACKAGE_INIT@
+
+# 包含导出的目标
+include("${CMAKE_CURRENT_LIST_DIR}/my_lib-targets.cmake")
+
+# 检查请求的组件是否都找到了
+# 如果用户写 find_package(MyLib REQUIRED COMPONENTS xxx)，
+# check_required_components 会验证 xxx 组件是否存在
+check_required_components(my_lib)
+
+# 可选：检查依赖是否可用
+# include(CMakeFindDependencyMacro)
+# find_dependency(Boost REQUIRED COMPONENTS filesystem)
+```
+
+> 💡 **说明**：
+> - `@PACKAGE_INIT@` 是 CMake 提供的特殊占位符，会被替换为初始化代码，包括设置 `PACKAGE_PREFIX_DIR` 等变量
+> - `check_required_components()` 用于验证 `find_package` 中 `COMPONENTS` 列出的组件是否都可用
+> - 如果你的库依赖其他库，使用 `find_dependency()` 而非 `find_package()`，这样找不到依赖时会正确传播错误
+
 ---
 
 ## 7. 测试集成
@@ -542,9 +565,11 @@ target_compile_features(my_app PRIVATE cxx_std_20)
 
 ## 10. 性能优化
 
+> 💡 **提示**：本节介绍最佳实践层面的性能优化。更详细的配置选项和高级用法（如预编译头重用、Unity 构建排除文件、ccache 集成等）请参考 [05-CMake进阶技巧.md](./05-CMake进阶技巧.md) 的"性能优化技巧"章节。
+
 ### 使用预编译头
 
-> 💡 **比喻**：这就像提前把所有常用的工具都放在工作台上，而不是每次需要时再去仓库找。把常用的头文件预先编译好，可以大大加快编译速度。
+> 💡 **比喻**：这就像厨师提前把葱姜蒜切好放碗里——每次炒菜直接抓一把，不用临时再切。预编译头就是把最常用的"配料"提前准备好，编译时直接下锅。
 
 ```cmake
 target_precompile_headers(my_target
@@ -557,7 +582,7 @@ target_precompile_headers(my_target
 
 ### 使用 Unity 构建
 
-> 💡 **比喻**：这就像把很多小文件合并成一个大文件夹来搬运，而不是一个个搬。虽然少了灵活性，但速度快很多。Unity Build 把多个源文件合并编译。
+> 💡 **比喻**：这就像搬家时把零碎东西全塞进一个大箱子——虽然找东西不方便，但搬运效率翻倍。Unity Build 就是把一堆小源文件合并成大文件编译，速度嗖嗖的。
 
 ```cmake
 set_target_properties(my_target PROPERTIES
@@ -568,7 +593,7 @@ set_target_properties(my_target PROPERTIES
 
 ### 并行编译
 
-> 💡 **比喻**：这就像让多个工人同时工作，而不是一个一个来。
+> 💡 **比喻**：这就像请了一队装修工人——一个人刷墙要一周，八个人一起干一天搞定。`--parallel 8` 就是雇了 8 个工人同时开工。
 
 ```bash
 cmake --build . --parallel 8

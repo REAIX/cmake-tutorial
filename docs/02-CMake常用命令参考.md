@@ -6,7 +6,7 @@
 
 ### cmake\_minimum\_required
 
-> 💡 **比喻**：这就像告诉施工队"你至少需要5年以上经验的老师傅"，确保他们有足够的能力来完成工作。
+> 💡 **比喻**：这就像餐厅门口挂的"本店厨师至少 5 年经验"——不是歧视新人，而是有些菜（新特性）只有老师傅才做得出来。版本太低？对不起，这道菜做不了。
 
 设置 CMake 的最低版本要求：
 
@@ -19,7 +19,7 @@ cmake_minimum_required(VERSION 3.15...3.25)
 
 ### project
 
-> 💡 **比喻**：这就像给项目起名字、登记备案。你需要告诉CMake这个项目叫什么、从哪来、做什么用的。
+> 💡 **比喻**：这就像给新生儿上户口——起名字、登记出生日期（版本号）、报国籍（语言）。没上户口的项目是"黑户"，CMake 不认。
 
 定义项目名称和属性：
 
@@ -72,7 +72,7 @@ add_executable(my_app WIN32 main.cpp)
 
 ### add\_library
 
-> 💡 **比喻**：这是"创建预制房间"的命令。你要告诉CMake：要什么样的房间（静态/动态/头文件）、用什么材料（源文件）。
+> 💡 **比喻**：这是"创建预制模块"的命令。你要告诉 CMake：要什么类型的模块——静态库像"浇筑好的混凝土"（搬不动但结实）、动态库像"乐高积木"（随时拆装）、头文件库像"纯图纸"（只有说明书没有实物）、对象库像"切好的菜"（半成品，等下锅）。
 
 创建库目标：
 
@@ -452,7 +452,7 @@ file(SHA256 "file.txt" HASH)
 
 ### find\_package
 
-> 💡 **比喻**：这就像去建材市场找材料。你要告诉CMake"帮我找某某品牌的某某材料"，它会帮你搜索系统中是否已安装这个库，如果找到了就告诉你怎么使用它。
+> 💡 **比喻**：这就像去建材市场找材料——你喊一嗓子"我要东鹏瓷砖！"，CMake 就满城帮你找。找到了告诉你仓库地址和提货方式（导入目标），找不到就看你有没有写 REQUIRED——写了就罢工，没写就默默跳过。
 
 查找外部包：
 
@@ -476,6 +476,70 @@ find_package(OpenCV QUIET)
 
 # 可选包
 find_package(Qt6 COMPONENTS Core Widgets)
+```
+
+#### find\_package 的两种工作模式
+
+> 💡 **比喻**：找材料有两种方式——Module 模式就像请了个"采购员"（FindXXX.cmake），他满大街跑，知道去哪个市场找、怎么验货，但每个采购员的报告格式不一样；Config 模式就像供应商直接递了张"供货清单"（XXXConfig.cmake），上面明码标价、仓库地址一清二楚，靠谱多了。
+
+**Module 模式**（优先使用）：
+
+CMake 在 `CMAKE_MODULE_PATH` 中搜索 `Find<Package>.cmake` 脚本文件。这些脚本是 CMake 或项目自己编写的"查找逻辑"。
+
+```cmake
+# CMake 自带的 Find 模块（部分列表）
+# FindBoost.cmake, FindOpenCV.cmake, FindProtobuf.cmake 等
+
+# 指定额外的 Find 模块搜索路径
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(MyCustomLib REQUIRED)
+```
+
+Module 模式的特点：
+- 查找逻辑由 `Find<Package>.cmake` 脚本定义
+- 不同包的变量命名可能不一致（如 `MYLIB_FOUND`、`MyLib_FOUND`）
+- CMake 逐步淘汰内置 Find 模块，推荐使用 Config 模式
+
+**Config 模式**（更可靠）：
+
+CMake 搜索 `<Package>Config.cmake` 或 `<package>-config.cmake` 文件。这些文件由库的安装过程生成，包含精确的目标信息。
+
+```cmake
+# Config 模式搜索路径（按顺序）：
+# 1. <Package>_DIR（缓存变量）
+# 2. CMAKE_PREFIX_PATH
+# 3. 系统标准路径（/usr, /usr/local 等）
+
+# 指定 Config 文件路径
+cmake -DMyLib_DIR=/path/to/lib/cmake/MyLib ..
+
+# 或使用 CMAKE_PREFIX_PATH
+cmake -DCMAKE_PREFIX_PATH=/path/to/install ..
+```
+
+Config 模式的特点：
+- 由库的安装过程自动生成，信息准确
+- 提供现代 CMake 导入目标（如 `MyLib::mylib`）
+- 变量命名统一规范
+
+**两种模式的选择顺序**：
+
+```
+find_package(MyLib)
+    ↓
+先尝试 Module 模式（查找 FindMyLib.cmake）
+    ↓ 找不到
+回退到 Config 模式（查找 MyLibConfig.cmake）
+    ↓ 找不到
+报错（如果指定了 REQUIRED）
+```
+
+```cmake
+# 强制使用 Config 模式
+find_package(MyLib CONFIG REQUIRED)
+
+# 强制使用 Module 模式
+find_package(MyLib MODULE REQUIRED)
 ```
 
 ### find\_library
@@ -536,7 +600,7 @@ find_program(PYTHON_EXECUTABLE
 
 ### install
 
-> 💡 **比喻**：这就像装修完成后的"家具摆放指南"。你得告诉CMake：房子盖好后，门把手装在哪（可执行文件→bin）、沙发搬到哪里（库文件→lib）、说明书放到哪个抽屉（头文件→include）。
+> 💡 **比喻**：这就像搬家后的"物品归位指南"——你得告诉 CMake：电视放客厅（可执行文件→bin）、书柜放书房（库文件→lib）、说明书塞抽屉（头文件→include）。不写的话，东西全堆门口，你自己翻。
 
 定义安装规则：
 
@@ -606,7 +670,7 @@ message("Simple message")
 
 ### add\_subdirectory
 
-> 💡 **比喻**：这就像在说"把那个房间的设计图也加进来"。你的项目可能有很多房间（子目录），每个房间有自己的CMakeLists.txt，你需要用这个命令把它们都包含进来。
+> 💡 **比喻**：这就像说"把隔壁那栋楼的设计图也拿来"——你的项目可能有很多栋楼（子目录），每栋楼有自己的 CMakeLists.txt，这个命令就是把它们都纳入统一规划。
 
 添加子目录：
 
@@ -617,7 +681,7 @@ add_subdirectory(lib)
 
 ### include
 
-> 💡 **比喻**：这就像把别人的"工具箱"直接拿过来用。你写了一些可重用的CMake函数放在别的文件里，用include就能把它们加载到当前脚本中。
+> 💡 **比喻**：这就像借邻居的工具箱——你写了一些可复用的 CMake 函数放在别的文件里，`include` 就是"拿来主义"，直接搬过来用，不用重新造轮子。
 
 包含其他 CMake 文件：
 
@@ -628,7 +692,7 @@ include(GNUInstallDirs)
 
 ### execute\_process
 
-> 💡 **比喻**：这就像在施工过程中让工人去跑腿——"去仓库拿一下材料"、"去问一下设计师这个尺寸对不对"。这个命令让CMake可以在配置阶段执行外部程序。
+> 💡 **比喻**：这就像施工时派工人去跑腿——"去仓库查一下这批钢筋的批次号！"（执行 git 命令查版本）、"去隔壁工地借个工具！"（运行脚本获取信息）。配置阶段的"跑腿小弟"，帮你搞定 CMake 自己做不了的事。
 
 执行外部命令：
 
@@ -664,6 +728,92 @@ add_custom_command(
 )
 ```
 
+### cmake\_parse\_arguments
+
+> 💡 **比喻**：这就像快递分拣员——一堆包裹（参数）扔过来，分拣员按标签分类：大件放这边（多值参数）、小件放那边（单值参数）、易碎品贴标签（布尔选项），整整齐齐码好等你来取。
+
+解析函数/宏的参数（CMake 3.5+）：
+
+```cmake
+# 定义函数时使用
+function(my_install target)
+    # 定义可选参数名（单值）
+    set(options OPTIONAL FAST)
+    # 定义单值关键字参数
+    set(oneValueArgs DESTINATION RENAME)
+    # 定义多值关键字参数
+    set(multiValueArgs TARGETS CONFIGS)
+
+    # 解析参数
+    cmake_parse_arguments(
+        MY_INSTALL              # 前缀，生成的变量以 MY_INSTALL_ 开头
+        "${options}"            # 布尔选项
+        "${oneValueArgs}"       # 单值参数
+        "${multiValueArgs}"     # 多值参数
+        ${ARGN}                 # 传入的参数
+    )
+
+    # 使用解析后的参数
+    if(MY_INSTALL_OPTIONAL)
+        message(STATUS "Optional install")
+    endif()
+
+    message(STATUS "Destination: ${MY_INSTALL_DESTINATION}")
+    message(STATUS "Targets: ${MY_INSTALL_TARGETS}")
+endfunction()
+
+# 调用函数
+my_install(my_target
+    DESTINATION bin
+    TARGETS app1 app2
+    OPTIONAL
+)
+# 结果：
+# MY_INSTALL_OPTIONAL = TRUE
+# MY_INSTALL_DESTINATION = "bin"
+# MY_INSTALL_TARGETS = "app1;app2"
+# MY_INSTALL_FAST = FALSE
+# MY_INSTALL_RENAME = 未定义
+```
+
+### string
+
+字符串操作：
+
+```cmake
+# 拼接
+set(FULL_NAME "${FIRST_NAME} ${LAST_NAME}")
+
+# 字符串替换
+string(REPLACE "old" "new" OUTPUT "old value old")  # OUTPUT = "new value new"
+
+# 正则替换
+string(REGEX REPLACE "[0-9]+" "N" OUTPUT "abc123def456")  # OUTPUT = "abcNdefN"
+
+# 正则匹配
+string(REGEX MATCH "[0-9]+" VERSION_NUM "v2.5.1")  # VERSION_NUM = "2"
+
+# 查找子串
+string(FIND "Hello World" "World" POS)  # POS = 6
+
+# 字符串长度
+string(LENGTH "Hello" LEN)  # LEN = 5
+
+# 子串
+string(SUBSTRING "Hello World" 0 5 RESULT)  # RESULT = "Hello"
+
+# 大小写转换
+string(TOUPPER "hello" UPPER)    # UPPER = "HELLO"
+string(TOLOWER "HELLO" LOWER)    # LOWER = "hello"
+
+# 去除空白
+string(STRIP "  hello  " RESULT)  # RESULT = "hello"
+
+# 比较
+string(COMPARE EQUAL "a" "a" RESULT)    # RESULT = TRUE
+string(COMPARE NOTEQUAL "a" "b" RESULT) # RESULT = TRUE
+```
+
 ***
 
 ## 小结
@@ -673,10 +823,11 @@ CMake 命令分类：
 - **项目配置**：`cmake_minimum_required`、`project`
 - **目标定义**：`add_executable`、`add_library`、`add_custom_target`
 - **目标属性**：`target_*` 系列命令
-- **变量操作**：`set`、`unset`、`list`、`option`
+- **变量操作**：`set`、`unset`、`list`、`option`、`string`
 - **条件循环**：`if`、`foreach`、`while`
 - **文件操作**：`file`
 - **查找命令**：`find_*` 系列命令
 - **安装命令**：`install`
+- **其他常用命令**：`message`、`add_subdirectory`、`include`、`execute_process`、`add_custom_command`、`cmake_parse_arguments`
 
 掌握这些命令，可以应对大部分 CMake 项目需求！

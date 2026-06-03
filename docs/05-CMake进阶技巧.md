@@ -6,7 +6,7 @@
 
 ### 创建可重用的 CMake 模块
 
-> 💡 **比喻**：这就像把你的"装修秘籍"整理成一本手册，下次装修时可以直接翻看，不用每次都重新想一遍怎么做。
+> 💡 **比喻**：这就像把你的"祖传菜谱"整理成一本小册子——下次做菜直接翻，不用每次都打电话问老妈"那个红烧肉放几颗八角来着？"
 
 在 `cmake/` 目录下创建自定义模块：
 
@@ -65,7 +65,7 @@ add_executable_with_defaults(my_app
 
 ### 使用 configure_file 生成配置文件
 
-> 💡 **比喻**：这就像在印名片时，先做一个模板（.in文件），然后填入具体的人名、职位等信息，生成正式的名片。CMake可以帮你做这个"填表"的工作。
+> 💡 **比喻**：这就像批量印名片——先做个模板"姓名：___，职位：___"，然后填入张三李四的信息，咔咔印出来。`.in` 文件就是名片模板，`configure_file` 就是那台印名片机。
 
 创建模板文件 `config.h.in`：
 
@@ -174,7 +174,7 @@ target_link_libraries(my_proto_lib
 
 ### 使用工具链文件
 
-> 💡 **比喻**：这就像你要去外国盖房子，需要了解当地用什么工具、什么材料标准。工具链文件就是告诉CMake"在某某国家盖房子需要用这些特殊工具"的说明书。
+> 💡 **比喻**：这就像你要去外国盖房子——当地用英制螺丝刀（ARM 编译器），你带的是公制（x86 编译器），拧不上！工具链文件就是一份"出国施工指南"，告诉 CMake："到了那边用这把螺丝刀、买这种螺丝、按他们的图纸来。"
 
 创建 `cmake/toolchains/arm-linux.cmake`：
 
@@ -210,7 +210,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux.cmake ..
 
 ### 使用预设（Presets）
 
-> 💡 **比喻**：这就像保存不同的"施工方案"。你可以有"快速方案"（Debug模式）、"精装方案"（Release模式）、"特殊方案"（针对MSVC编译器）。每次施工时选一个方案就不用每次都手动配置了。
+> 💡 **比喻**：这就像保存不同的"游戏存档"——"休闲模式"（Debug，慢慢玩）、"速通模式"（Release，追求最快）、"地狱难度"（MSVC，Windows 限定挑战）。选个存档就能直接开玩，不用每次重新调设置。
 
 创建 `CMakePresets.json`：
 
@@ -440,7 +440,7 @@ install(CODE "
 
 ### 从 Git 仓库获取依赖
 
-> 💡 **比喻**：这就像让装修公司直接去供应商的仓库提货，而不是你先自己去买回来。FetchContent可以自动帮你下载和管理第三方库。
+> 💡 **比喻**：这就像点外卖——你不用亲自去菜市场买食材、不用自己炒菜，手机点一下（`FetchContent_Declare`），骑手就把做好的菜（编译好的库）送上门。懒人福音！
 
 ```cmake
 include(FetchContent)
@@ -473,25 +473,78 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(my_dependency)
 ```
 
-### 自定义 FetchContent
+### 自定义 FetchContent 配置
+
+> ⚠️ **注意**：`FetchContent_Populate` 在 CMake 3.28+ 中已被弃用，推荐使用 `FetchContent_MakeAvailable` 配合选项覆盖。
 
 ```cmake
+# 推荐方式：使用 FetchContent_MakeAvailable + 选项覆盖
 FetchContent_Declare(
     external_lib
     GIT_REPOSITORY https://github.com/user/external_lib.git
-    GIT_TAG main
+    GIT_TAG v1.0.0
 )
 
-FetchContent_GetProperties(external_lib)
-if(NOT external_lib_POPULATED)
-    FetchContent_Populate(external_lib)
-    
-    # 自定义配置
-    set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    
-    # 添加子目录
-    add_subdirectory(${external_lib_SOURCE_DIR} ${external_lib_BINARY_DIR})
+# 在 MakeAvailable 之前设置选项，控制依赖的构建行为
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(external_lib)
+
+# 使用依赖
+target_link_libraries(my_app PRIVATE external_lib::external_lib)
+```
+
+### FetchContent 与 find_package 配合
+
+```cmake
+# 方式 1：优先使用系统安装的包，找不到时自动下载
+# 使用 OVERRIDE_FIND_PACKAGE 让 FetchContent 覆盖 find_package
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1
+    OVERRIDE_FIND_PACKAGE  # CMake 3.24+：让 find_package(fmt) 使用 FetchContent
+)
+
+# 优先查找系统安装，找不到则自动下载
+find_package(fmt REQUIRED)
+target_link_libraries(my_app PRIVATE fmt::fmt)
+
+# 方式 2：通过选项控制是否下载
+option(FETCH_DEPS "Fetch dependencies instead of finding them" OFF)
+
+if(FETCH_DEPS)
+    FetchContent_Declare(fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG 10.2.1
+    )
+    FetchContent_MakeAvailable(fmt)
+else()
+    find_package(fmt REQUIRED)
 endif()
+
+target_link_libraries(my_app PRIVATE fmt::fmt)
+```
+
+### 离线使用 FetchContent
+
+```cmake
+# 如果依赖已经下载到本地，可以指定源目录
+# 设置环境变量或 CMake 变量覆盖下载位置
+# FETCHCONTENT_SOURCE_DIR_<uppercase name> 优先于下载
+
+# 示例：使用本地 fmt 源码
+# cmake -DFETCHCONTENT_SOURCE_DIR_FMT=/path/to/fmt ..
+
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1
+)
+
+# 如果设置了 FETCHCONTENT_SOURCE_DIR_FMT，则不会下载，直接使用本地源码
+FetchContent_MakeAvailable(fmt)
 ```
 
 ---
@@ -500,7 +553,7 @@ endif()
 
 ### 构建外部项目
 
-> 💡 **比喻**：这就像你不仅在装修自己的房子，还让装修队帮你把邻居家的车库也一起翻修了。ExternalProject可以让你在构建自己的项目时，顺便把依赖的外部项目也构建一遍。
+> 💡 **比喻**：这就像你不仅装修自己的房子，还让装修队去隔壁小区帮邻居盖了一栋楼——完全独立施工，用他们自己的工具和材料，盖好了把钥匙（库文件）给你就行。
 
 ```cmake
 include(ExternalProject)
@@ -548,6 +601,49 @@ set_target_properties(lib_external PROPERTIES
 
 # 添加依赖关系
 add_dependencies(lib_external external_lib)
+```
+
+### FetchContent vs ExternalProject 如何选择？
+
+> 💡 **比喻**：FetchContent 就像"把供应商的工人请到你的工地上干活"——他们用你的工具、在你的管理下工作；ExternalProject 就像"让供应商在自己的工厂里生产，然后把成品运给你"——他们用自己的工具、按自己的方式工作。
+
+| 对比项 | FetchContent | ExternalProject |
+|--------|-------------|-----------------|
+| **执行时机** | 配置阶段 | 构建阶段 |
+| **依赖方式** | `add_subdirectory` | 独立构建安装 |
+| **目标可见性** | 直接可用 | 需要手动导入 IMPORTED 目标 |
+| **构建系统** | 必须是 CMake 项目 | 可以是任意构建系统 |
+| **编译器/选项** | 与主项目一致 | 可以独立配置 |
+| **适用场景** | CMake 项目的源码依赖 | 非 CMake 项目或需要隔离构建 |
+
+**选择建议**：
+
+```cmake
+# ✅ 使用 FetchContent 的场景：
+# 1. 依赖是 CMake 项目，且你想直接使用它的目标
+# 2. 需要在配置阶段就知道依赖的详细信息
+# 3. 希望依赖使用与主项目相同的编译器和选项
+
+include(FetchContent)
+FetchContent_Declare(fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 10.2.1
+)
+FetchContent_MakeAvailable(fmt)
+target_link_libraries(my_app PRIVATE fmt::fmt)  # 直接使用目标
+
+# ✅ 使用 ExternalProject 的场景：
+# 1. 依赖不是 CMake 项目（如 Makefile、Autotools 项目）
+# 2. 需要与主项目使用不同的编译器或构建选项
+# 3. 需要完全隔离的构建过程
+# 4. 需要自定义构建步骤（如打补丁）
+
+include(ExternalProject)
+ExternalProject_Add(protobuf
+    GIT_REPOSITORY https://github.com/protocolbuffers/protobuf.git
+    GIT_TAG v25.0
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=<INSTALL_DIR>
+)
 ```
 
 ---
@@ -662,7 +758,7 @@ set_source_files_properties(special.cpp PROPERTIES
 
 ### 使用 ccache
 
-> 💡 **比喻**：这就像你有一个记忆力超强的助手。你上次用砖头砌了一面墙，这次还要砌类似的墙，助手说"我记的上次你是怎么砌的，直接用那个方法吧"，不用从头再学一次。ccache就是这样的缓存工具。
+> 💡 **比喻**：ccache 就像一个"过目不忘的厨师"——上次做过的菜，他记住了所有步骤和火候，下次同样的菜直接出盘，不用重新看菜谱。编译过的代码再次编译？秒出！
 
 ```cmake
 find_program(CCACHE_PROGRAM ccache)
@@ -727,7 +823,7 @@ CMake 进阶技巧包括：
 - **跨平台配置** - 工具链文件和预设
 - **高级目标属性** - 自定义属性和高级配置
 - **安装配置** - 导出目标和安装脚本
-- **依赖管理** - FetchContent 和 ExternalProject
+- **依赖管理** - FetchContent（推荐）、ExternalProject 及其选型
 - **测试配置** - CTest 高级功能
 - **性能优化** - 预编译头、Unity 构建、ccache
 - **调试分析** - 编译数据库和构建分析
