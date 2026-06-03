@@ -13,9 +13,12 @@
 ```cmake
 cmake_minimum_required(VERSION 3.20)
 
-# 设置版本范围
-cmake_minimum_required(VERSION 3.15...3.25)
+# 设置版本范围（CMake 3.12+ 支持）
+# 含义：最低需要 3.15，最高测试到 4.0
+cmake_minimum_required(VERSION 3.15...4.0)
 ```
+
+> ⚠️ **CMake 4.0 注意**：CMake 4.0 不再兼容 3.5 之前的版本。如果 `cmake_minimum_required(VERSION)` 设置低于 3.5，CMake 4.0+ 会报错。建议始终设置版本范围的上限为你测试过的最高版本。
 
 ### project
 
@@ -43,7 +46,7 @@ project(MyProject
 - `PROJECT_VERSION_MINOR` - 次版本号（0）
 - `PROJECT_VERSION_PATCH` - 补丁版本号（0）
 
-***
+---
 
 ## 目标定义命令
 
@@ -112,7 +115,7 @@ add_custom_target(run_tests
 )
 ```
 
-***
+---
 
 ## 目标属性命令
 
@@ -227,7 +230,7 @@ target_sources(my_app
 )
 ```
 
-***
+---
 
 ## 变量操作命令
 
@@ -303,7 +306,7 @@ if(ENABLE_TESTS)
 endif()
 ```
 
-***
+---
 
 ## 条件与循环命令
 
@@ -400,7 +403,7 @@ while(COUNT LESS 5)
 endwhile()
 ```
 
-***
+---
 
 ## 文件操作命令
 
@@ -446,7 +449,7 @@ file(DOWNLOAD "https://example.com/file.txt" "local.txt")
 file(SHA256 "file.txt" HASH)
 ```
 
-***
+---
 
 ## 查找命令
 
@@ -594,7 +597,7 @@ find_program(PYTHON_EXECUTABLE
 )
 ```
 
-***
+---
 
 ## 安装命令
 
@@ -643,7 +646,7 @@ install(EXPORT my_lib-targets
 )
 ```
 
-***
+---
 
 ## 其他常用命令
 
@@ -814,7 +817,7 @@ string(COMPARE EQUAL "a" "a" RESULT)    # RESULT = TRUE
 string(COMPARE NOTEQUAL "a" "b" RESULT) # RESULT = TRUE
 ```
 
-***
+---
 
 ## 小结
 
@@ -831,3 +834,9 @@ CMake 命令分类：
 - **其他常用命令**：`message`、`add_subdirectory`、`include`、`execute_process`、`add_custom_command`、`cmake_parse_arguments`
 
 掌握这些命令，可以应对大部分 CMake 项目需求！
+
+---
+
+> 📖 **相关阅读**：
+> - [04-CMake常见问题.md](../faq/README.md) - 命令使用中的常见问题
+> - [05-CMake进阶技巧.md](../practices/05-CMake进阶技巧.md) - 更高级的用法和技巧

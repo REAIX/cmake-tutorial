@@ -1,8 +1,9 @@
 # CMake 开发 Qt6 指南
 
 > 💡 **前置阅读**：建议先阅读以下文档了解基础概念：
-> - [01-CMake基础概念.md](./01-CMake基础概念.md) - CMake 基本概念
-> - [02-CMake常用命令参考.md](./02-CMake常用命令参考.md) - 常用命令
+> - [01-CMake基础概念.md](../basics/01-CMake基础概念.md) - CMake 基本概念
+> - [02-CMake常用命令参考.md](../basics/02-CMake常用命令参考.md) - 常用命令
+> - [09-CMake与IDE集成.md](./09-CMake与IDE集成.md) - Qt Creator 等 IDE 配置
 
 ---
 
@@ -66,6 +67,8 @@ qt_project/
 ### 3.2 最简 CMakeLists.txt
 
 ```cmake
+# Qt6 最低支持 CMake 3.16，本教程其他部分推荐 3.20+
+# 这里使用 3.16 是为了与 Qt6 官方最低要求保持一致
 cmake_minimum_required(VERSION 3.16)
 project(MyQtApp VERSION 1.0 LANGUAGES CXX)
 
@@ -199,6 +202,8 @@ qt_add_translations(my_app
 简化 Qt 项目的初始配置，自动设置 AUTOMOC 等：
 
 ```cmake
+# Qt6 最低支持 CMake 3.16，本教程其他部分推荐 3.20+
+# 这里使用 3.16 是为了与 Qt6 官方最低要求保持一致
 cmake_minimum_required(VERSION 3.16)
 project(MyQtApp LANGUAGES CXX)
 
@@ -274,6 +279,8 @@ my_qt_app/
 ### 5.2 完整 CMakeLists.txt
 
 ```cmake
+# Qt6 最低支持 CMake 3.16，本教程其他部分推荐 3.20+
+# 这里使用 3.16 是为了与 Qt6 官方最低要求保持一致
 cmake_minimum_required(VERSION 3.16)
 project(MyQtApp VERSION 1.0.0 LANGUAGES CXX)
 
@@ -286,11 +293,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-
-# 如果使用 Qt Quick，还需要
-# set(CMAKE_AUTOMOC ON)
-# set(CMAKE_AUTORCC ON)
-# set(CMAKE_AUTOUIC ON)
 
 # ============ 查找 Qt6 ============
 find_package(Qt6 REQUIRED COMPONENTS
@@ -557,6 +559,8 @@ endif()
 ### 9.1 基础模板
 
 ```cmake
+# Qt6 最低支持 CMake 3.16，本教程其他部分推荐 3.20+
+# 这里使用 3.16 是为了与 Qt6 官方最低要求保持一致
 cmake_minimum_required(VERSION 3.16)
 project(MyQtProject VERSION 1.0 LANGUAGES CXX)
 
@@ -590,6 +594,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 ### 9.2 多模块模板
 
 ```cmake
+# Qt6 最低支持 CMake 3.16，本教程其他部分推荐 3.20+
+# 这里使用 3.16 是为了与 Qt6 官方最低要求保持一致
 cmake_minimum_required(VERSION 3.16)
 project(MyComplexQtApp VERSION 1.0 LANGUAGES CXX)
 
@@ -600,13 +606,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
-
-# 平台特定设置
-if(WIN32)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        WIN32_EXECUTABLE TRUE
-    )
-endif()
 
 # 查找所有需要的 Qt 组件
 find_package(Qt6 REQUIRED COMPONENTS
@@ -619,6 +618,13 @@ find_package(Qt6 REQUIRED COMPONENTS
 
 # 创建可执行文件
 add_executable(${PROJECT_NAME} main.cpp)
+
+# 平台特定设置（必须在 add_executable 之后）
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+endif()
 
 # 链接所有 Qt 组件
 target_link_libraries(${PROJECT_NAME} PRIVATE

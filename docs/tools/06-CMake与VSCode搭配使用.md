@@ -1,6 +1,8 @@
 # CMake 与 VS Code 搭配使用指南
 
-> 💡 **前置阅读**：建议先阅读 [01-CMake基础概念.md](./01-CMake基础概念.md) 了解 CMake 的基本概念。
+> 💡 **相关阅读**：本文聚焦 VSCode 配置。如需了解其他 IDE（CLion、Visual Studio、Qt Creator），请阅读 [09-CMake与IDE集成.md](./09-CMake与IDE集成.md)。
+
+> 💡 **前置阅读**：建议先阅读 [01-CMake基础概念.md](../basics/01-CMake基础概念.md) 了解 CMake 的基本概念。
 
 ## 为什么要用 VS Code 配合 CMake？
 

@@ -1,8 +1,10 @@
 # CMake 与 CI/CD 集成
 
 > 💡 **前置阅读**：建议先阅读以下文档了解基础概念：
-> - [01-CMake基础概念.md](./01-CMake基础概念.md) - CMake 基本概念
-> - [03-CMake最佳实践.md](./03-CMake最佳实践.md) - 最佳实践
+> - [01-CMake基础概念.md](../basics/01-CMake基础概念.md) - CMake 基本概念
+> - [03-CMake最佳实践.md](../practices/03-CMake最佳实践.md) - 最佳实践
+> - [05-CMake进阶技巧.md](../practices/05-CMake进阶技巧.md) - CMakePresets 等进阶配置
+> - [09-CMake与IDE集成.md](./09-CMake与IDE集成.md) - IDE 中的 CMake 配置
 
 ---
 

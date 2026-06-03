@@ -62,15 +62,29 @@ cmake-tutorial/
 │       └── main.cpp
 │
 └── docs/                       # 文档
-    ├── 01-CMake基础概念.md
-    ├── 02-CMake常用命令参考.md
-    ├── 03-CMake最佳实践.md
-    ├── 04-CMake常见问题.md
-    ├── 05-CMake进阶技巧.md
-    ├── 06-CMake与VSCode搭配使用.md
-    ├── 07-CMake开发Qt6指南.md
-    ├── 08-CMake与CI-CD集成.md
-    └── 09-CMake与IDE集成.md
+    ├── basics/                 # 基础知识
+    │   ├── 01-CMake基础概念.md
+    │   └── 02-CMake常用命令参考.md
+    ├── practices/              # 实践指南
+    │   ├── 03-CMake最佳实践.md
+    │   └── 05-CMake进阶技巧.md
+    ├── tools/                  # 工具与IDE
+    │   ├── 06-CMake与VSCode搭配使用.md
+    │   ├── 07-CMake开发Qt6指南.md
+    │   ├── 08-CMake与CI-CD集成.md
+    │   └── 09-CMake与IDE集成.md
+    └── faq/                    # 常见问题（按主题拆分）
+        ├── README.md           # FAQ 索引
+        ├── beginner-零基础入门.md  # 🌱 新手必看！
+        ├── build-配置与构建.md
+        ├── build-编译器选择.md
+        ├── deps-依赖管理.md
+        ├── files-路径与文件.md
+        ├── compile-编译与链接.md
+        ├── platform-跨平台.md
+        ├── install-安装与打包.md
+        ├── debug-调试技巧.md
+        └── perf-性能优化.md
 ```
 
 ## 学习路径
@@ -290,7 +304,7 @@ cmake --build .
 ## 快速开始
 
 ### 环境要求
-- **CMake**: >= 3.20
+- **CMake**: >= 3.20（推荐 4.0+）
 - **C++ 编译器**: 支持 C++20 标准
   - GCC >= 10
   - Clang >= 10
@@ -360,7 +374,7 @@ cmake -DBUILD_FETCHCONTENT=ON ..
 
 ## CMake 最佳实践
 
-### 1. 使用现代 CMake（3.20+）
+### 1. 使用现代 CMake（3.20+，推荐 4.0+）
 - 避免使用过时的命令（如 `link_directories`、`include_directories`）
 - 使用目标导向的命令（`target_*` 系列）
 
@@ -414,6 +428,8 @@ target_compile_features(my_lib PUBLIC cxx_std_20)
 ---
 
 ## 常见问题
+
+> 📖 完整 FAQ 请查看 [docs/faq/README.md](docs/faq/README.md)
 
 ### Q1: 如何查看 CMake 的详细输出？
 ```bash

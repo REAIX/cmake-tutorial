@@ -38,6 +38,8 @@ add_executable(my_app main.cpp)
 
 #### 库目标（Library）
 ```cmake
+# 以下三种库类型选择其一（不能同时使用同名目标）
+
 # 静态库 - 就像一次性浇筑好的混凝土块，直接嵌入房子里
 add_library(my_lib STATIC lib.cpp)
 
@@ -285,8 +287,11 @@ cmake_policy(POP)
 | `CMP0077` | 3.13 | `option()` 命令在已定义变量时不再覆盖 |
 | `CMP0092` | 3.15 | MSVC 警告标志 `/W3` 不再默认添加 |
 | `CMP0100` | 3.17 | `file(STRINGS)` 中 `REGEX` 选项的行为 |
+| `CMP0169` | 4.0 | `FetchContent_Populate` 已移除（使用 `FetchContent_MakeAvailable`） |
 
 > 💡 **最佳实践**：使用 `cmake_minimum_required(VERSION 3.20)` 会自动将所有在该版本之前引入的策略设为 NEW 行为，通常不需要手动设置策略。只有在遇到策略警告时才需要处理。
+
+> ⚠️ **CMake 4.0 重大变更**：CMake 4.0（2025年3月发布）不再兼容 3.5 之前的版本。如果你的 `cmake_minimum_required(VERSION)` 设置低于 3.5，CMake 4.0+ 会直接报错。建议将最低版本设为 3.5 以上（推荐 3.20+）。如果必须编译旧项目，可设置环境变量 `CMAKE_POLICY_VERSION_MINIMUM=3.5` 临时绕过。
 
 ---
 
@@ -607,3 +612,9 @@ CMake 的核心概念：
 - **策略**：控制 CMake 版本间的行为兼容性
 
 理解这些概念是掌握 CMake 的基础！
+
+---
+
+> 📖 **下一步阅读**：
+> - [02-CMake常用命令参考.md](./02-CMake常用命令参考.md) - 学习 CMake 的常用命令
+> - [03-CMake最佳实践.md](../practices/03-CMake最佳实践.md) - 掌握现代 CMake 最佳实践

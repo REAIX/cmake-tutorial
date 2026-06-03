@@ -33,11 +33,8 @@ target_compile_features(format_lib INTERFACE cxx_std_20)
 # 创建可执行目标
 add_executable(header_only_example main.cpp)
 
-# 链接 Header-Only 库
+# 链接 Header-Only 库（format_lib 的 INTERFACE cxx_std_20 会自动传播）
 target_link_libraries(header_only_example PRIVATE format_lib)
-
-# 设置可执行目标的 C++ 标准
-target_compile_features(header_only_example PRIVATE cxx_std_20)
 
 # 输出配置状态信息
 message(STATUS "09-header-only: Header-only example configured")

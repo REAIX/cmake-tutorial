@@ -1,8 +1,9 @@
 # CMake 与 IDE 集成指南
 
 > 💡 **前置阅读**：建议先阅读以下文档了解基础概念：
-> - [01-CMake基础概念.md](./01-CMake基础概念.md) - CMake 基本概念
+> - [01-CMake基础概念.md](../basics/01-CMake基础概念.md) - CMake 基本概念
 > - [06-CMake与VSCode搭配使用.md](./06-CMake与VSCode搭配使用.md) - VSCode 配置
+> - [07-CMake开发Qt6指南.md](./07-CMake开发Qt6指南.md) - Qt6 开发（Qt Creator 相关）
 
 ---
 

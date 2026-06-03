@@ -216,7 +216,7 @@ cmake -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux.cmake ..
 
 ```json
 {
-    "version": 3,
+    "version": 6,
     "configurePresets": [
         {
             "name": "default",
@@ -262,9 +262,20 @@ cmake -DCMAKE_TOOLCHAIN_FILE=cmake/toolchains/arm-linux.cmake ..
             "name": "release",
             "configurePreset": "release"
         }
+    ],
+    "testPresets": [
+        {
+            "name": "debug",
+            "configurePreset": "debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
     ]
 }
 ```
+
+> 💡 **提示**：`version` 字段建议使用 6（CMake 3.25+ 支持），它支持 `configurePresets`、`buildPresets`、`testPresets`、`packagePresets` 和 `workflowPresets`。version 2（CMake 3.14+）已支持 `testPresets`，version 6（CMake 3.25+）新增了 `packagePresets` 和 `workflowPresets`。CMake 4.0+ 推荐使用 version 9（支持更多功能）。
 
 使用预设：
 
@@ -829,3 +840,10 @@ CMake 进阶技巧包括：
 - **调试分析** - 编译数据库和构建分析
 
 掌握这些进阶技巧，可以构建出更加专业、高效的 CMake 项目！
+
+---
+
+> 📖 **相关阅读**：
+> - [04-CMake常见问题.md](../faq/README.md) - 常见问题排查
+> - [08-CMake与CI-CD集成.md](../tools/08-CMake与CI-CD集成.md) - CI/CD 中的 CMake 配置
+> - [09-CMake与IDE集成.md](../tools/09-CMake与IDE集成.md) - IDE 中的 CMake 配置
