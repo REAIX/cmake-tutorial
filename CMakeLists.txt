@@ -16,6 +16,10 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
+# 导出 compile_commands.json，供 clangd、VS Code IntelliSense 等工具使用
+# 注意：仅对 Ninja 和 Unix Makefiles 生成器有效，Visual Studio 和 MinGW Makefiles 不支持
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 option(BUILD_EXAMPLES "Build all examples" ON)
 option(BUILD_FETCHCONTENT "Build FetchContent example (requires network)" OFF)
 
