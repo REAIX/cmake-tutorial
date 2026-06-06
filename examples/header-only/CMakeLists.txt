@@ -10,7 +10,7 @@ option(ENABLE_DEBUG_OUTPUT "Enable debug output in header-only example" OFF)
 
 # 使用 configure_file 从模板生成配置头文件
 # @VAR@ 会被替换为 CMake 变量的值
-# #cmakedefine 会根据变量是否定义生成 #define 或 /* #undef */
+# #cmakedefine01 会生成 #define VAR 0 或 #define VAR 1，比 #cmakedefine 更安全
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.h

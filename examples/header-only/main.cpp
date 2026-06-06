@@ -28,7 +28,7 @@ int main() {
     std::cout << "4. configure_file(config.h.in config.h)\n";
     std::cout << "   - Generates config.h from template at configure time\n";
     std::cout << "   - @VAR@ is replaced with CMake variable values\n";
-    std::cout << "   - #cmakedefine becomes #define or /* #undef */\n";
+    std::cout << "   - #cmakedefine01 generates #define VAR 0 or #define VAR 1\n";
     std::cout << "\n";
 
     // 演示 format_lib 功能
@@ -46,10 +46,11 @@ int main() {
     std::cout << "  HEADER_ONLY_EXAMPLE_VERSION = " << HEADER_ONLY_EXAMPLE_VERSION << "\n";
 
     // 检查 ENABLE_DEBUG_OUTPUT 是否通过 configure_file 定义
-#ifdef ENABLE_DEBUG_OUTPUT
-    std::cout << "  ENABLE_DEBUG_OUTPUT = defined\n";
+    // 使用 #cmakedefine01 生成 #define ENABLE_DEBUG_OUTPUT 0 或 1
+#if ENABLE_DEBUG_OUTPUT
+    std::cout << "  ENABLE_DEBUG_OUTPUT = defined (1)\n";
 #else
-    std::cout << "  ENABLE_DEBUG_OUTPUT = not defined\n";
+    std::cout << "  ENABLE_DEBUG_OUTPUT = not defined (0)\n";
 #endif
 
     std::cout << "\n";

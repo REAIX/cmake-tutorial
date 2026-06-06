@@ -27,8 +27,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build type")
 endif()
 
-string(TIMESTAMP BUILD_TIMESTAMP "%Y-%m-%d %H:%M:%S")
-message(STATUS "Build timestamp: ${BUILD_TIMESTAMP}")
+# 注意：不在配置阶段获取时间戳，避免每次重新 configure 都触发不必要的重编译
+# 时间戳将在 generate_build_info.cmake 脚本中于构建阶段获取
 
 add_custom_command(
     OUTPUT ${GENERATED_DIR}/build_info.hpp
@@ -37,7 +37,6 @@ add_custom_command(
         -DPROJECT_VERSION="${PROJECT_VERSION}"
         -DBUILD_TYPE="${CMAKE_BUILD_TYPE}"
         -DGIT_COMMIT_HASH="${GIT_COMMIT_HASH}"
-        -DBUILD_TIMESTAMP="${BUILD_TIMESTAMP}"
         -P ${CMAKE_CURRENT_SOURCE_DIR}/generate_build_info.cmake
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/generate_build_info.cmake
     COMMENT "Generating build_info.hpp from CMake configuration"

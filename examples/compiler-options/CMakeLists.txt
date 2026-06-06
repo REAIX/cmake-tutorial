@@ -104,6 +104,10 @@ endif()
 # 方法四：针对不同构建类型设置不同选项
 # ============================================================================
 
+# 检测编译器是否支持 AddressSanitizer（MinGW 等环境可能不提供 ASan 运行时库）
+include(CheckCXXCompilerFlag)
+check_cxx_compiler_flag("-fsanitize=address" HAS_ASAN_SUPPORT)
+
 # Debug 模式特定选项
 target_compile_options(compiler_options_example PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:MSVC>>:
@@ -115,15 +119,31 @@ target_compile_options(compiler_options_example PRIVATE
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:GNU>>:
         -O0           # 禁用优化
         -g3           # 最大调试信息
-        -fsanitize=address  # 地址消毒器
     >
 
     $<$<AND:$<CONFIG:Debug>,$<CXX_COMPILER_ID:Clang>>:
         -O0           # 禁用优化
         -g3           # 最大调试信息
-        -fsanitize=address  # 地址消毒器
     >
 )
+
+# AddressSanitizer 需要同时在编译和链接阶段启用
+# 注意：MinGW 等环境可能不支持 ASan，因此先检测编译器支持情况
+if(HAS_ASAN_SUPPORT)
+    target_compile_options(compiler_options_example PRIVATE
+        $<$<AND:$<CONFIG:Debug>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:
+            -fsanitize=address  # 地址消毒器
+        >
+    )
+    target_link_options(compiler_options_example PRIVATE
+        $<$<AND:$<CONFIG:Debug>,$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>>:
+            -fsanitize=address  # 链接阶段也必须启用
+        >
+    )
+    message(STATUS "  AddressSanitizer: enabled for Debug builds")
+else()
+    message(STATUS "  AddressSanitizer: not supported by this compiler/platform, skipped")
+endif()
 
 # Release 模式特定选项
 # 注意：-flto 在某些 MinGW 版本上可能需要额外配置
