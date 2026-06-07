@@ -1,6 +1,6 @@
 # CMake 常用命令参考
 
-> 📂 **对应示例**：本节内容对应示例代码 [examples/variables/](../examples/variables/) 和 [examples/targets/](../examples/targets/)，建议结合示例代码一起学习。
+> 📂 **对应示例**：本节内容对应示例代码 [examples/variables/](../../examples/variables/) 和 [examples/targets/](../../examples/targets/)，建议结合示例代码一起学习。
 
 ## 项目配置命令
 
@@ -838,5 +838,5 @@ CMake 命令分类：
 ---
 
 > 📖 **相关阅读**：
-> - [04-CMake常见问题.md](../faq/README.md) - 命令使用中的常见问题
+> - [FAQ 常见问题](../faq/README.md) - 命令使用中的常见问题
 > - [05-CMake进阶技巧.md](../practices/05-CMake进阶技巧.md) - 更高级的用法和技巧

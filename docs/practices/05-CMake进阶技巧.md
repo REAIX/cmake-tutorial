@@ -1,6 +1,6 @@
 # CMake 进阶技巧
 
-> 📂 **对应示例**：本节内容对应示例代码 [examples/advanced/](../examples/advanced/) 和 [examples/fetchcontent/](../examples/fetchcontent/)，建议结合示例代码一起学习。
+> 📂 **对应示例**：本节内容对应示例代码 [examples/advanced/](../../examples/advanced/) 和 [examples/fetchcontent/](../../examples/fetchcontent/)，建议结合示例代码一起学习。
 
 ## 1. 自定义 CMake 模块
 
@@ -844,6 +844,6 @@ CMake 进阶技巧包括：
 ---
 
 > 📖 **相关阅读**：
-> - [04-CMake常见问题.md](../faq/README.md) - 常见问题排查
+> - [FAQ 常见问题](../faq/README.md) - 常见问题排查
 > - [08-CMake与CI-CD集成.md](../tools/08-CMake与CI-CD集成.md) - CI/CD 中的 CMake 配置
 > - [09-CMake与IDE集成.md](../tools/09-CMake与IDE集成.md) - IDE 中的 CMake 配置

@@ -1,6 +1,6 @@
 # CMake 基础概念
 
-> 📂 **对应示例**：本节内容对应示例代码 [examples/basic/](../examples/basic/)，建议结合示例代码一起学习。
+> 📂 **对应示例**：本节内容对应示例代码 [examples/basic/](../../examples/basic/)，建议结合示例代码一起学习。
 
 ## 什么是 CMake？
 
